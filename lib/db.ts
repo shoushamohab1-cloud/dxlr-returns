@@ -8,7 +8,6 @@ export async function getDb() {
 
   const uri = process.env.MONGODB_URI;
   const dbName = process.env.MONGODB_DB || "dxlr";
-
   if (!uri) throw new Error("Missing MONGODB_URI");
   if (!dbName) throw new Error("Missing MONGODB_DB");
 
