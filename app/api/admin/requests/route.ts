@@ -1,22 +1,4 @@
-import { getDb } from '../../../../lib/db';
-import { NextResponse } from 'next/server';
 
-// مفيش exports غير GET
-export async function GET(req: Request) {
-  const ADMIN_PASS = process.env.ADMIN_PASS || 'gmt7173m';
-  const h = req.headers.get('authorization');
-  if (!h || h !== `Basic ${btoa('admin:' + ADMIN_PASS)}`) {
-    return new Response('Unauthorized', { status: 401, headers: { 'WWW-Authenticate': 'Basic' } });
-  }
-
-  const db = await getDb();
-  const requests = await db
-    .collection('dxlr_requests')
-    .find({})
-    .sort({ createdAt: -1 })
-    .limit(200)
-    .toArray();
-
-  return NextResponse.json({ ok: true, requests });
-}
-
+import { getDb } from '@/lib/db'; import { NextRequest, NextResponse } from 'next/server';
+function okAuth(req:NextRequest){ const ADMIN_PASS=process.env.ADMIN_PASS||'gmt7173m'; const h=req.headers.get('authorization'); return !!h && h===`Basic ${btoa('admin:'+ADMIN_PASS)}`; }
+export async function GET(req:NextRequest){ if(!okAuth(req)) return new Response('Unauthorized',{status:401,headers:{'WWW-Authenticate':'Basic'}}); const db=await getDb(); const search=req.nextUrl.searchParams.get('search')?.trim(); const q:any={}; if(search){ q.$or=[{orderNumber:{$regex:search,$options:'i'}},{phone:{$regex:search,$options:'i'}},{ref:{$regex:search,$options:'i'}}]; } const requests=await db.collection('dxlr_requests').find(q).sort({createdAt:-1}).limit(500).toArray(); return NextResponse.json({ok:true,requests}); }

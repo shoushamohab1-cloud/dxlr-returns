@@ -1,23 +1,7 @@
 {
-  "name": "dxlr-returns",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
-  },
-  "dependencies": {
-    "next": "14.2.5",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "mongodb": "^6.7.0",
-    "zod": "^3.23.8",
-    "graphql-request": "^7.1.0"
-  },
-  "devDependencies": {
-    "typescript": "^5.6.3",
-    "@types/node": "^20.14.10",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0"
-  }
+  "name":"dxlr-returns",
+  "private":true,
+  "scripts":{"dev":"next dev","build":"next build","start":"next start"},
+  "dependencies":{"next":"14.2.5","react":"18.2.0","react-dom":"18.2.0","mongodb":"^6.7.0","zod":"^3.23.8","graphql-request":"^7.1.0"},
+  "devDependencies":{"typescript":"^5.6.3","@types/node":"^20.14.10","@types/react":"^18.3.3","@types/react-dom":"^18.3.0"}
 }

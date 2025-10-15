@@ -1,22 +1,16 @@
-# DXLR Returns (Minimal)
 
-**What you get**
-- Customer portal (`/portal.html`) to lookup an order (by order number + phone), pick items/quantities, select reason, accept terms, and submit.
-- Admin dashboard (`/admin/returns`) to view and manage requests.
-- API routes to talk to Shopify + MongoDB.
+DXLR Returns Portal - Next.js 14 (App Router) + TypeScript + MongoDB + Shopify GraphQL
 
-## Setup (Vercel)
-1) Create a project from this repo.
-2) Add env vars:
-   - SHOPIFY_SHOP = your-shop.myshopify.com
-   - SHOPIFY_ADMIN_TOKEN = shpat_xxx
-   - MONGODB_URI = mongodb+srv://USER:PASS@cluster0.mongodb.net
-   - MONGODB_DB = dxlr
-   - APP_SLA_DAYS = 5
-   - APP_REQUIRE_PHONE = true
-3) Deploy.
-
-## Notes
-- The admin actions currently update DB status. Hook them to Shopify (returns/refunds/draft orders) when ready.
-
-- Optional: ADMIN_PASS (for admin endpoints/password). Default = gmt7173m
+ENV (Vercel settings):
+- MONGODB_URI
+- MONGODB_DB=returns
+- SHOPIFY_SHOP (e.g. e6rs1y-km.myshopify.com)
+- SHOPIFY_ADMIN_TOKEN
+- SHOPIFY_API_VERSION=2023-10
+- ADMIN_PASS=gmt7173m
+- RETURN_WINDOW_DAYS=14
+- MAX_UPLOAD_IMAGES=3
+- REVIEW_TIME_TEXT="يتم المراجعة خلال ٥ أيام عمل"
+- REQUEST_PREFIX_EX=DXLR-EX
+- REQUEST_PREFIX_RF=DXLR-RF
+- APP_REQUIRE_PHONE=true
