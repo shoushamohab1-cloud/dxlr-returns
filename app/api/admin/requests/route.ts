@@ -8,7 +8,7 @@ export async function middlewareAuth(req: Request) {
   return null;
 }
 
-import { getDb } from '../../../../lib/db';
+import { getDb } from '../../../../../../lib/db';
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request){
