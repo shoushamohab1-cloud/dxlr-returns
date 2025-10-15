@@ -1,13 +1,22 @@
-import { MongoClient, Db } from 'mongodb';
+import { MongoClient, Db } from "mongodb";
 
-let client: MongoClient | null = null;
-let db: Db | null = null;
+let cachedClient: MongoClient | null = null;
+let cachedDb: Db | null = null;
 
-export async function getDb(){
-  if(db) return db;
-  const uri = process.env.MONGODB_URI!;
-  client = new MongoClient(uri);
+export async function getDb() {
+  if (cachedDb) return cachedDb;
+
+  const uri = process.env.MONGODB_URI;
+  const dbName = process.env.MONGODB_DB || "dxlr";
+
+  if (!uri) throw new Error("Missing MONGODB_URI");
+  if (!dbName) throw new Error("Missing MONGODB_DB");
+
+  const client = new MongoClient(uri);
   await client.connect();
-  db = client.db(process.env.MONGODB_DB || 'dxlr');
+  const db = client.db(dbName);
+
+  cachedClient = client;
+  cachedDb = db;
   return db;
 }
