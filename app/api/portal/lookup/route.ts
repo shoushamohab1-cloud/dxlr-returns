@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { findOrderByNumber } from '@/lib/shopify';
+import { findOrderByNumber } from '../../../../lib/shopify';
 
 const LookupSchema = z.object({ orderNumber: z.string(), phone: z.string() });
 

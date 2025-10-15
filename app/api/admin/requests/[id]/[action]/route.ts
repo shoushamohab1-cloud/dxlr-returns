@@ -9,7 +9,7 @@ export async function middlewareAuth(req: Request) {
 }
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getDb } from '@/lib/db';
+import { getDb } from '../../../../../lib/db';
 import { ObjectId } from 'mongodb';
 
 export async function POST(req: NextRequest, { params }: { params: { id: string, action: string }}){

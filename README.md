@@ -20,8 +20,3 @@
 - The admin actions currently update DB status. Hook them to Shopify (returns/refunds/draft orders) when ready.
 
 - Optional: ADMIN_PASS (for admin endpoints/password). Default = gmt7173m
-
-
-## DNS for portal
-- Set a CNAME: `returns` -> your Vercel domain (e.g. dxlr-returns.vercel.app)
-- In Vercel > Project > Settings > Domains: add `returns.dxlr-eg.com`

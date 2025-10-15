@@ -3,53 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DXLR – Returns & Exchanges Portal</title>
+  <title>DXLR – Portal</title>
   <style>
     body{margin:0;font-family:Inter,system-ui,Arial;background:#09282e;color:#fff}
     .wrap{max-width:940px;margin:24px auto;padding:0 16px}
     h1{color:#86e10e}
     .card{border:1px solid #86e10e;border-radius:16px;padding:16px;margin:12px 0;background:#0f3a41}
     input,select,button{padding:12px;border-radius:10px;border:1px solid #86e10e;background:#09282e;color:#fff}
-    button{background:#86e10e;color:#09282e;border:none;font-weight:900;cursor:pointer}
+    button{background:#86e10e;color:#09282e;border:none;font-weight:900}
     .row{display:flex;gap:8px;flex-wrap:wrap}
     .mt{margin-top:12px}
     label{display:block;margin:6px 0 4px 0}
-    .muted{opacity:.85;font-size:.95rem}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1 id="title">بوابة DXLR للمرتجعات والاستبدالات</h1>
-
-    <div class="card muted" id="notice">
-      <div id="conditions-ar" style="display:none">
-        ❗️ <b>سياسة المرتجعات:</b> خلال <b>14 يومًا من الاستلام</b> بشرط أن يكون المنتج <b>بحالته الأصلية</b> و<span>التيكت</span> سليم وغير منزوع.
-      </div>
-      <div id="conditions-en" style="display:none">
-        ❗️ <b>Return policy:</b> within <b>14 days after delivery</b> and the item must be in <b>original condition</b> with the hangtag intact.
-      </div>
-    </div>
-
+    <h1>بوابة DXLR للمرتجعات والاستبدالات</h1>
     <div class="card">
-      <label id="lbl-order">رقم الطلب</label>
+      <label>رقم الطلب</label>
       <input id="orderNumber" placeholder="مثال: 1234" />
-      <label class="mt" id="lbl-phone">رقم الموبايل</label>
+      <label class="mt">رقم الموبايل</label>
       <input id="phone" placeholder="+2010..." />
       <div class="mt"><button id="lookup">عرض الطلب</button></div>
       <div id="lookupResult" class="mt"></div>
     </div>
 
     <div id="flow" class="card" style="display:none">
-      <label id="lbl-type">نوع الطلب</label>
+      <label>نوع الطلب</label>
       <select id="type"><option value="return">استرجاع</option><option value="exchange">استبدال</option></select>
       <div id="items" class="mt"></div>
-      <label class="mt" id="lbl-reason">سبب الطلب</label>
+      <label class="mt">سبب الطلب</label>
       <input id="reason" placeholder="اكتب السبب بإيجاز" />
-      <div class="mt">
-        <label><input type="checkbox" id="agree" />
-          <span id="agree-text">أوافق على تحمل تكلفة الشحن والمدة ٥ أيام عمل</span>
-        </label>
-      </div>
+      <div class="mt"><label><input type="checkbox" id="agree" /> أوافق على تحمل تكلفة الشحن والمدة ٥ أيام عمل</label></div>
       <div class="mt"><button id="submit">إرسال الطلب</button></div>
       <div id="submitResult" class="mt"></div>
     </div>
@@ -62,76 +47,24 @@
     let currentOrder = null;
     let selected = {}; // lineItemId -> qty
 
-    // --- Language auto-detect (ar/en) ---
-    const ui = {
-      ar: {
-        title: 'بوابة DXLR للمرتجعات والاستبدالات',
-        order: 'رقم الطلب',
-        phone: 'رقم الموبايل',
-        btnLookup: 'عرض الطلب',
-        type: 'نوع الطلب',
-        reason: 'سبب الطلب',
-        reasonPh: 'اكتب السبب بإيجاز',
-        agree: 'أوافق على تحمل تكلفة الشحن والمدة ٥ أيام عمل',
-        itemsIntro: 'اختر الكميات المراد ارجاعها/استبدالها:',
-        error: 'حصل خطأ: ',
-        sentOk: 'تم إرسال الطلب بنجاح',
-        sentFail: 'فشل الإرسال: ',
-        qtyTotal: 'اجمالي'
-      },
-      en: {
-        title: 'DXLR Returns & Exchanges Portal',
-        order: 'Order number',
-        phone: 'Phone number',
-        btnLookup: 'Show order',
-        type: 'Request type',
-        reason: 'Reason',
-        reasonPh: 'Write a brief reason',
-        agree: 'I accept shipping cost and 5 business days processing',
-        itemsIntro: 'Select quantities to return/exchange:',
-        error: 'Error: ',
-        sentOk: 'Request submitted successfully',
-        sentFail: 'Submit failed: ',
-        qtyTotal: 'Total'
-      }
-    };
-
-    function applyLang(lang){
-      const L = ui[lang];
-      document.documentElement.dir = (lang==='ar'?'rtl':'ltr');
-      document.documentElement.lang = lang;
-      document.getElementById('title').textContent = L.title;
-      document.getElementById('lbl-order').textContent = L.order;
-      document.getElementById('lbl-phone').textContent = L.phone;
-      document.getElementById('lookup').textContent = L.btnLookup;
-      document.getElementById('lbl-type').textContent = L.type;
-      document.getElementById('lbl-reason').textContent = L.reason;
-      document.getElementById('reason').placeholder = L.reasonPh;
-      document.getElementById('agree-text').textContent = L.agree;
-      document.getElementById('conditions-ar').style.display = (lang==='ar'?'block':'none');
-      document.getElementById('conditions-en').style.display = (lang==='en'?'block':'none');
-    }
-    const prefersAr = (navigator.language || '').toLowerCase().startsWith('ar');
-    applyLang(prefersAr ? 'ar' : 'en');
-
     document.getElementById('lookup').onclick = async () => {
       const orderNumber = document.getElementById('orderNumber').value.trim();
       const phone = document.getElementById('phone').value.trim();
       const res = await fetch(API.lookup,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({orderNumber,phone})});
       const data = await res.json();
       const out = document.getElementById('lookupResult');
-      if(!data.ok){ out.textContent = (prefersAr?ui.ar.error:ui.en.error) + data.error; return; }
+      if(!data.ok){ out.textContent = 'حصل خطأ: '+ data.error; return; }
       currentOrder = data.order;
-      out.textContent = (prefersAr?'تم العثور على الطلب: ':'Order found: ') + currentOrder.name;
+      out.textContent = 'تم العثور على الطلب: ' + currentOrder.name;
       const itemsDiv = document.getElementById('items');
-      itemsDiv.innerHTML = '<div>'+ (prefersAr?ui.ar.itemsIntro:ui.en.itemsIntro) +'</div>';
+      itemsDiv.innerHTML = '<div>اختر الكميات المراد ارجاعها/استبدالها:</div>';
       selected = {};
       currentOrder.items.forEach(it => {
         selected[it.lineItemId] = 0;
         const row = document.createElement('div');
         row.className = 'row';
         row.innerHTML = '<div style="min-width:280px">'+it.title+(it.variantTitle?(' – '+it.variantTitle):'')+'</div>'+
-                        '<div>'+ (prefersAr?ui.ar.qtyTotal:ui.en.qtyTotal) +': '+it.quantityOrdered+'</div>'+
+                        '<div>اجمالي: '+it.quantityOrdered+'</div>'+
                         '<div><input id="qty_'+it.lineItemId+'" type="number" min="0" max="'+it.quantityOrdered+'" value="0" style="width:80px"/></div>';
         itemsDiv.appendChild(row);
         document.getElementById('qty_'+it.lineItemId).oninput = (e)=>{
@@ -145,16 +78,16 @@
     };
 
     document.getElementById('submit').onclick = async () => {
-      if(!currentOrder){ alert(prefersAr?'اعرض الطلب الأول':'Load order first'); return; }
+      if(!currentOrder){ alert('اعرض الطلب الأول'); return; }
       const items = Object.entries(selected).filter(([k,v])=>v>0).map(([lineItemId,quantitySelected])=>({lineItemId,quantitySelected:Number(quantitySelected)}));
-      if(items.length===0){ alert(prefersAr?'اختر كمية واحدة على الأقل':'Pick at least one quantity'); return; }
+      if(items.length===0){ alert('اختر كمية واحدة على الأقل'); return; }
       const reason = document.getElementById('reason').value.trim();
       const acceptCost = document.getElementById('agree').checked;
       const type = document.getElementById('type').value;
       const payload = { type, orderId: currentOrder.id, orderNumber: currentOrder.name.replace('#',''), phone: document.getElementById('phone').value.trim(), reason, acceptCost, items };
       const res = await fetch(API.request,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
       const data = await res.json();
-      document.getElementById('submitResult').textContent = data.ok ? (prefersAr?ui.ar.sentOk:ui.en.sentOk) : ((prefersAr?ui.ar.sentFail:ui.en.sentFail)+data.error);
+      document.getElementById('submitResult').textContent = data.ok ? 'تم إرسال الطلب بنجاح' : ('فشل الإرسال: '+data.error);
     };
   </script>
 </body>
