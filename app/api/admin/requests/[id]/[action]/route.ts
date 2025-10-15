@@ -1,21 +1,8 @@
-// Basic password protection
-const ADMIN_PASS = process.env.ADMIN_PASS || "gmt7173m";
-export async function middlewareAuth(req: Request) {
-  const auth = req.headers.get("authorization");
-  if (!auth || auth !== `Basic ${btoa("admin:" + ADMIN_PASS)}`) {
-    return new Response("Unauthorized", { status: 401, headers: { "WWW-Authenticate": "Basic" } });
-  }
-  return null;
-}
-
 import { NextRequest, NextResponse } from 'next/server';
 import { getDb } from '../../../../../../lib/db';
 import { ObjectId } from 'mongodb';
 
 export async function POST(req: NextRequest, { params }: { params: { id: string, action: string }}){
-  const check = await middlewareAuth(req);
-  if (check) return check;
-
   const { id, action } = params;
   const allowed = ['approve','reject','mark_received','refund','exchange'];
   if(!allowed.includes(action)) return NextResponse.json({ ok:false, error:'BAD_ACTION' }, { status:400 });

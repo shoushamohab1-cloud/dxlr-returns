@@ -28,7 +28,5 @@ export async function POST(req: NextRequest){
     businessDaysSLA: Number(process.env.APP_SLA_DAYS || 5)
   };
   const res = await db.collection('dxlr_requests').insertOne(doc as any);
-  return NextResponse.json({ ok:true, id: str(res.insertedId) });
+  return NextResponse.json({ ok:true, id: String(res.insertedId) });
 }
-
-function str(x:any){ try { return x.toString(); } catch { return String(x); } }
